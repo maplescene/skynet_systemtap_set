@@ -7,4 +7,5 @@ sudo stap -v mini_lua_bt.stp --skip-badvars -x $1 $2 $3 $4 -g --suppress-time-li
 
 lua ./dump.lua $5 a.bt | tee b.bt
 
-./flamegraph.pl --fontsize=10 --minwidth=1 b.bt >skynet.svg
+./flamegraph.pl --fontsize=10 a.bt >skynet_a.svg
+./flamegraph.pl --fontsize=10 b.bt >skynet.svg
