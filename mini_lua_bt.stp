@@ -1,5 +1,5 @@
 probe begin {
-    warn(sprintf("Tracing %d (@1) for standard Lua 5.3...\n", target()))
+    warn(sprintf("Tracing %d (%s) for standard Lua 5.3...\n", target(), @1))
 }
 
 global quit = 0;
@@ -42,12 +42,11 @@ probe process(@1).function("luaL_*"),
                 gc = p->func->value_->gc
                 closure = &@cast(gc, "GCUnion", @1)->cl
                 lua_closure = &closure->l
-                proto = lua_closure->p
-                source = proto->source
-                lineinfo = proto->lineinfo
-                line_index = p->u->l->savedpc - proto->code
-
-                filename = kernel_string(source + 33)
+                share_proto = lua_closure->p->sp
+                source = @cast(share_proto, "SharedProto", @1)->source
+                lineinfo = share_proto->lineinfo
+                line_index = p->u->l->savedpc - share_proto->code
+                filename = kernel_string(source + 27)
                 lineno = kernel_int(lineinfo+line_index) - 1
                 frame = sprintf("%s:%d", filename, lineno)
             }
@@ -79,7 +78,7 @@ probe process(@1).function("luaL_*"),
     }
 }
 
-probe timer.s(10) {
+probe timer.s($3) {
     warn("Quiting now\\n")
     quit = 1;
     exit()
