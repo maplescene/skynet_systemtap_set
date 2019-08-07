@@ -8,6 +8,14 @@ Usage
 =====
  ```shell
  #change the skynet bin source to your path, and add -g to 3rd/lua Makefile in skynet project
- sudo ./monitor_skynet_and_gen_svg.sh skynet_pid skynet_bin_path serviceid_in_decimal seconds
+ sudo ./monitor_skynet_and_gen_svg.sh skynet_pid skynet_bin_path serviceid_in_decimal seconds proj_path
  ```
- Then use [dump_lua_function](https://github.com/spin6lock/dump_lua_function) to convert filename:lineno to filename:func.
+# dump_lua_function
+
+Convert lua stack backtrace file from filename:lineno to filename:funcname. Fail on nested function definition.
+
+Usage:
+======
+```lua
+lua dump.lua project_src_dir your_lua_bt_file | tee new_bt_filename
+```
